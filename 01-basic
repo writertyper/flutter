@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -21,18 +21,31 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 4;
+
+  final yourcontroller = TextEditingController();
+
+
+  int _counter = 0;
   void _incrementCounter() {
-    setState(() { 
+    setState(() {
       _counter++;
+    });
+  }
+
+  void _decrementCounter() {
+    setState(() {
+      _counter--;
+    });
+  }
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
     });
   }
 
@@ -46,11 +59,44 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: const Color(0xFF2c3e50),
       ),
       body: Center(
-   
+
         child: Column(
-        
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            TextFormField(
+              controller: yourcontroller,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Enter Number',
+                suffixIcon: Padding(
+                  padding: EdgeInsets.only(),
+                  child:
+                  Icon(Icons.numbers, color: Color(0xffff4876)),
+                ),
+              ),
+              validator: (text) {
+                if (text == null || text.isEmpty) {
+                  return 'Please enter a number';
+                }
+                return null;
+              },
+            ),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      // Retrieve the text the that user has entered by using the
+                      // TextEditingController.
+                      content: Text(yourcontroller.text),
+                    );
+                  },
+                );
+              },
+              child: const Text('Submit'),
+            ),
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -58,14 +104,24 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            ElevatedButton(
+
+              onPressed: _incrementCounter,
+              child: const Text('Increase'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _decrementCounter,
+              child: const Text('Decrease')
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), 
+        onPressed: _resetCounter,
+        tooltip: 'Reset',
+        child: const Icon(Icons.favorite),
+      ),
     );
   }
 }
